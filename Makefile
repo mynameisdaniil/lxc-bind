@@ -16,18 +16,18 @@ default: $(TARGET)
 all: default
 
 SOURCES = $(wildcard $(SRCDIR)/*.c)
-HEADERS  = $(wildcard $(SRCDIR)/*.h)
-OBJECTS  = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, ${SOURCES})
+HEADERS = $(wildcard $(SRCDIR)/*.h)
+OBJECTS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, ${SOURCES})
 
-%.o: $(SOURCES) $(HEADERS)
-	-mkdir $(OBJDIR)
+$(OBJDIR)/%.o: $(SOURCES) $(HEADERS)
+	@mkdir -p $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
 
 .PRECIOUS: $(TARGET) $(OBJECTS)
 
 $(TARGET): $(OBJECTS)
-	-mkdir $(dir $@)
+	@mkdir -p $(dir $@)
 	$(CC) $(OBJECTS) $(STATIC) -Wall $(LIBS) -o $@
 	@echo "Linking complete!"
 

@@ -5,15 +5,21 @@ OBJDIR = obj
 BINDIR = bin
 TARGET = $(BINDIR)/$(NAME)
 
-LIBS = -liptc -llxc
-STATIC = /usr/lib/libargtable2.a
-CC = gcc
-CFLAGS = -g -Wall -O0
+LIBS     = -liptc -llxc
+STATIC   = /usr/lib/libargtable2.a
+CC       = gcc
+VALGRIND = valgrind
+VFLAGS	 = --leak-check=yes
+CFLAGS   = -g -Wall -O0
 
-.PHONY: default all clean
+.PHONY: default all run clean
 
 default: $(TARGET)
 all: default
+run: all
+	@$(TARGET)
+valgrind: all
+	@$(VALGRIND) $(VFLAGS) $(TARGET)
 
 SOURCES = $(wildcard $(SRCDIR)/*.c)
 HEADERS = $(wildcard $(SRCDIR)/*.h)

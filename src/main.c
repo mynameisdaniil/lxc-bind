@@ -2,6 +2,7 @@
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <argtable2.h>
 #include <lxc/lxccontainer.h>
 #include <libiptc/libiptc.h>
@@ -22,6 +23,20 @@ int main(int argc, char **argv) {
     end     = arg_end(10)
   };
 
+  char cwd[FILENAME_MAX];
+  if (!getcwd(cwd, sizeof(cwd)))
+    exit(1);
+
+  lxcpath->sval[0]    = "~/.local/share/lxc/";
+  pid->filename[0]    = "lxc-bind.pid";
+  config->filename[0] = "lxc-bind.conf";
+
+  char full_pid[FILENAME_MAX];
+  sprintf(full_pid, "%s/%s", cwd, pid->filename[0]);
+
+  char full_config[FILENAME_MAX];
+  sprintf(full_config, "%s/%s", cwd, config->filename[0]);
+
   int nerr = arg_parse(argc, argv, argtable);
   if (nerr > 0) {
     arg_print_errors(stdout, end, "lxc-bind");
@@ -30,6 +45,7 @@ int main(int argc, char **argv) {
     exit(1);
   }
 
-  printf("hello there!\n");
+  printf("pid file: %s\n", full_pid);
+  printf("hello there! %s\n", cwd);
   exit(0);
 }

@@ -7,10 +7,10 @@ TARGET = $(BINDIR)/$(NAME)
 
 LIBS     = -liptc -llxc
 STATIC   = /usr/lib/libargtable2.a
+CFLAGS   = -g -Wall -O0
 CC       = gcc
 VALGRIND = valgrind
 VFLAGS	 = --leak-check=yes
-CFLAGS   = -g -Wall -O0
 
 .PHONY: default all run clean
 

@@ -15,6 +15,8 @@
 #include <lxc/lxccontainer.h>
 #include <libiptc/libiptc.h>
 
+#define PID_SIZE 16
+
 typedef struct ConfigEntry {
   const char* src_iface;
   uint16_t    src_port;

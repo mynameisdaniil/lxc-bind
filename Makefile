@@ -12,7 +12,7 @@ CC       = gcc
 VALGRIND = valgrind
 VFLAGS	 = --leak-check=yes
 
-.PHONY: default all run clean
+.PHONY: default all run clean force-rebuild
 
 default: $(TARGET)
 all: default
@@ -25,7 +25,12 @@ SOURCES = $(wildcard $(SRCDIR)/*.c)
 HEADERS = $(wildcard $(SRCDIR)/*.h)
 OBJECTS = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, ${SOURCES})
 
-$(OBJDIR)/%.o: $(SOURCES) $(HEADERS)
+VERSION := $(shell git describe --abbrev=4 --dirty --always)
+
+$(SRCDIR)/version.h: force-rebuild
+	@sed -e 's/[@]VERSION[@]/$(VERSION)/' $@.in > $@
+
+$(OBJDIR)/%.o: $(SOURCES) $(HEADERS) $(SRCDIR)/version.h
 	@mkdir -p $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
